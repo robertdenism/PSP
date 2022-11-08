@@ -10,64 +10,48 @@ import javax.swing.JLabel;
 
 
 public class Reloj extends JFrame{
+	public Reloj() {
+		super("Reloj");
+		
+		setLayout(new FlowLayout());
+		
+		JLabel l = new JLabel();
+		l.setText("0");
+		getContentPane().add(l);
+		
+		JButton b = new JButton("¡Comienza!");
+		getContentPane().add(b);
+		
+		Object sync = new Object();
+		
+		Contador c = new Contador(l, sync);
+		Thread t = new Thread(c);
+		t.start();
+		
+		b.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				synchronized(sync) {
+					sync.notify();
+				}
+			}
+		});
+		
+		JButton bPara = new JButton("¡Para!");
+		getContentPane().add(bPara);
+		bPara.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				t.interrupt();
+			}
+		});
+		
+		setSize(500,400);
+		setVisible(true);
+	}
+	
 	public static void main(String[] args) {
 		new Reloj();
 	}
 	
-	
-	
-	
-	public Reloj() {
-		
-		
-		super("MI PRIMERA VENTANA");
-		
-		//creamos boton y labble
-		JLabel l = new JLabel();
-		JButton b = new JButton("Pulsame");
-		JButton bPara = new JButton("PARAR");
-		
-		
-		//seteamos la vista de la ventana
-		setLayout(new FlowLayout());
-		
-		//añadimos al contenido del panel label y boton
-		
-		getContentPane().add(l);
-		getContentPane().add(b);
-		getContentPane().add(bPara);
-		
-		//modificamos el texto del boton
-		l.setText("Hola Mundo");
-		
-		//tamaño de la ventana y visibilidad
-		setSize(500, 400);
-		setVisible(true);
-		
-		
-		// modificamos para cuando se pulse y se modifique texto
-		
-		Contador c = new Contador(l);
-		Thread t = new Thread(c);
-		
-		
-		bPara.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				t.stop();
-			}
-		});
-		
-		
-		b.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				t.start();
-			}
-		});
-		
-	}
-
 }

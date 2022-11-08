@@ -3,26 +3,42 @@ package ejercicios;
 import javax.swing.JLabel;
 
 public class Contador implements Runnable {
-	private static final long INTERVALO = 100;
+	private static final long INTERVALO = 1;
 	JLabel _salida;
-	int contador = 0;
-
-	public Contador(JLabel salida) {
+	Object _sync;
+	
+	int cont = 0;
+	
+	public Contador(JLabel salida, Object sync) {
 		_salida = salida;
+		_sync = sync;
 	}
-
-	@Override
-	public void run() {
-
+	
+	private void parar() {
 		try {
-			while (true) {
-				contador++;
-				_salida.setText(Integer.toString(contador));
-				Thread.sleep(INTERVALO);
+			synchronized(_sync) {
+				_sync.wait();
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void run() {
+		parar();
+		
+		while(true) {
+			cont++;
+			_salida.setText(Integer.toString(cont));
+			
+			try {
+				Thread.sleep(INTERVALO);
+			} catch (InterruptedException e) {
+				//e.printStackTrace();
+				parar();
+			}
 		}
 	}
 
