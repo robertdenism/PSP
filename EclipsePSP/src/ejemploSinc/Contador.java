@@ -5,14 +5,16 @@ class Contador {
 		this.c = c;
 	}
 	
-	// 3Âº.- Posible sincro
+	//synchronized solo puede ejecutar un thread a la vez
+	
+	// se añade synchronized al metodo incrementa
 	public synchronized void incrementa() {
 		int tmp = c;
 		tmp = tmp + 1;
 		c = tmp;
 	}
 	
-	// 3Âº.- Posible sincro
+	//se añade synchronized al metodo decremente
 	public synchronized void decrementa() {
 		int tmp = c;
 		tmp = tmp - 1;
